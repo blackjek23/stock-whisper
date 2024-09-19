@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Strategy Home Page</title>
+</head>
+<body>
+    <h1>Welcome to the Strategy Testing Home Page</h1>
+    <ul>
+        {% for strategy in strategies %}
+            <li><a href="{{ strategy.url }}">{{ strategy.name }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
