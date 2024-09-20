@@ -6,19 +6,21 @@ path= './DataBase'
 def read_stock_data():
     # Read the stocks data from DataBase
     stocks_list= os.listdir(path)
+    all_alerts = []
     for stock in stocks_list:
         df= pd.read_csv(f'{path}/{stock}')
         alerts= detect_ema_cross(df)
         if alerts is not None:
-            with open('./Alerts/ema150.txt', 'a') as output_file:
-            # Write the ticker name and the last row to the alerts file
-                ticker= stock.replace('.csv', '')
-                output_file.write(f"Ticker: {ticker}\n")
-                output_file.write(f"{alerts.to_string()}\n")
-                output_file.write("\n")  # Add a newline for separation between entries
+            ticker = stock.replace('.csv', '')
+            alert_message = f"Ticker: {ticker}\n{alerts.to_string()}\n\n"
+            all_alerts.append(alert_message)
+
+        with open('./Alerts/ema150.txt', 'w') as output_file:
+            for alert in all_alerts:
+                output_file.write(alert)
 
 def detect_ema_cross(df):
-    # Calculate the 150 EMA (if not already in the CSV)
+    # Calculate the 150 EMA
     df['150_EMA'] = df['Close'].ewm(span=150, adjust=False).mean()
 
     # Calculate when the close price crosses above or below the 150 EMA
